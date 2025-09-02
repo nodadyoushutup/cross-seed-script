@@ -48,6 +48,9 @@ def _get_app_scale(app: str) -> int:
     scale.
     """
     proc = _run_midclt(["call", "chart.release.get_instance", app])
+    logger.debug(
+        "midclt get_instance output for %s: %s", app, proc.stdout.strip()
+    )
     try:
         data = json.loads(proc.stdout)
     except json.JSONDecodeError:
@@ -63,7 +66,9 @@ def wait_for_stop(app: str, timeout: int = 60) -> bool:
     """Wait until an application reports scale 0."""
     end = time.time() + timeout
     while time.time() < end:
-        if _get_app_scale(app) == 0:
+        scale = _get_app_scale(app)
+        logger.debug("Current scale for %s: %s", app, scale)
+        if scale == 0:
             return True
         time.sleep(2)
     return False
