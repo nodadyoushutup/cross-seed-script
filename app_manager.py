@@ -34,9 +34,28 @@ def start_app(app: str) -> None:
 
 
 def _get_app_scale(app: str) -> int:
-    """Return the current replica count for an application."""
+    """Return the current replica count for an application.
+
+    The ``chart.release.get_instance`` midclt call is expected to return a JSON
+    object describing the release.  In some failure cases midclt may instead
+    return a plain string (for example an error message).  Attempting to treat
+    that string like a dictionary previously resulted in an ``AttributeError``
+    bubbling up to the monitor thread.
+
+    To make the monitor robust we defensively parse the output and ensure we
+    only access the "scale" field when a mapping object is returned.  Any
+    unexpected output is logged and ``-1`` is returned to signal an unknown
+    scale.
+    """
     proc = _run_midclt(["call", "chart.release.get_instance", app])
-    data = json.loads(proc.stdout)
+    try:
+        data = json.loads(proc.stdout)
+    except json.JSONDecodeError:
+        logger.error("Invalid JSON from midclt for %s: %s", app, proc.stdout.strip())
+        return -1
+    if not isinstance(data, dict):
+        logger.error("Unexpected response from midclt for %s: %s", app, data)
+        return -1
     return data.get("status", {}).get("scale", -1)
 
 
