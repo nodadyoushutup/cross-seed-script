@@ -6,7 +6,7 @@ import subprocess
 import time
 from pathlib import Path
 
-from config import BASE_DIR, RESTART_DELAY
+from config import BASE_DIR, RESTART_DELAYS
 
 logger = logging.getLogger(__name__)
 
@@ -114,7 +114,8 @@ def restart_procedure(app: str) -> None:
         return
     clear_job_log(app)
     clear_logs(app)
-    logger.info("Waiting %d seconds before restarting %s", RESTART_DELAY, app)
-    time.sleep(RESTART_DELAY)
+    delay = RESTART_DELAYS.get(app, 60 * 60)
+    logger.info("Waiting %d seconds before restarting %s", delay, app)
+    time.sleep(delay)
     start_app(app)
     logger.info("Restarted %s", app)

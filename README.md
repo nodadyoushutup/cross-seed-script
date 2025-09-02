@@ -21,4 +21,7 @@ error is detected a background thread will:
 2. Confirm the app is stopped.
 3. Clear the `job_log` table in `cross-seed.db`.
 4. Remove the `logs/` directory for a fresh start.
-5. Wait 30 minutes before restarting the application.
+5. Wait a configurable delay (default 60 minutes) before restarting the application.
+
+Restart delays for each application are configured in `config.py` via the
+`RESTART_DELAYS` dictionary.
