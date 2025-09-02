@@ -2,6 +2,7 @@ import logging
 import threading
 import time
 import re
+from datetime import datetime
 from pathlib import Path
 
 from config import BASE_DIR, APPS, SCAN_INTERVAL
@@ -52,9 +53,19 @@ def _worker(app: str) -> None:
 
 
 def main() -> None:
+    """Entry point for the log monitoring daemon."""
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    log_dir = Path("monitor_logs")
+    log_dir.mkdir(exist_ok=True)
+    log_file = log_dir / f"monitor_{timestamp}.log"
+
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s %(levelname)s %(message)s",
+        handlers=[
+            logging.StreamHandler(),
+            logging.FileHandler(log_file, encoding="utf-8"),
+        ],
     )
     logger.info("Starting log monitor")
     while True:

@@ -10,6 +10,10 @@ automatically restarts affected applications.
 python monitor.py
 ```
 
+Logs from each run are written to the console and also saved under
+`monitor_logs/` with a timestamped filename (e.g.
+`monitor_logs/monitor_20240101_120000.log`).
+
 The script scans each application's log every 10 seconds.  When a 429
 error is detected a background thread will:
 
@@ -18,4 +22,3 @@ error is detected a background thread will:
 3. Clear the `job_log` table in `cross-seed.db`.
 4. Remove the `logs/` directory for a fresh start.
 5. Wait 30 minutes before restarting the application.
-```
