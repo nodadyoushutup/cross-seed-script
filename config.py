@@ -19,4 +19,4 @@ APPS = [
 SCAN_INTERVAL = 10
 
 # Delay (in seconds) before restarting an application after a failure
-RESTART_DELAY = 30 * 60  # 30 minutes
+RESTART_DELAY = 60 * 60  # 60 minutes

@@ -14,7 +14,7 @@ _active_threads: dict[str, threading.Thread] = {}
 _lock = threading.Lock()
 
 # Regular expression to match isolated "429" codes
-ERROR_RE = re.compile(r'(^|[^0-9])429([^0-9]|$)')
+ERROR_RE = re.compile(r'(^|[^[:alnum:]_])429([^[:alnum:]_]|$)')
 
 
 def check_logs() -> None:
