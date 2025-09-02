@@ -36,16 +36,13 @@ def start_app(app: str) -> None:
 def _get_app_scale(app: str) -> int:
     """Return the current replica count for an application.
 
-    The ``chart.release.get_instance`` midclt call is expected to return a JSON
-    object describing the release.  In some failure cases midclt may instead
-    return a plain string (for example an error message).  Attempting to treat
-    that string like a dictionary previously resulted in an ``AttributeError``
-    bubbling up to the monitor thread.
-
-    To make the monitor robust we defensively parse the output and ensure we
-    only access the "scale" field when a mapping object is returned.  Any
-    unexpected output is logged and ``-1`` is returned to signal an unknown
-    scale.
+    The ``chart.release.get_instance`` midclt call should emit a JSON object
+    describing the release.  Historically we expected this structure to contain
+    ``{"status": {"scale": <int>}}`` but on some TrueNAS versions the
+    ``status`` field is simply a string (e.g. ``"STOPPED"``) and the desired
+    replica count lives in ``pod_status.desired``.  When the output deviates from
+    our expectations we defensively handle it and return ``-1`` to indicate an
+    unknown scale.
     """
     proc = _run_midclt(["call", "chart.release.get_instance", app])
     logger.debug(
@@ -59,7 +56,17 @@ def _get_app_scale(app: str) -> int:
     if not isinstance(data, dict):
         logger.error("Unexpected response from midclt for %s: %s", app, data)
         return -1
-    return data.get("status", {}).get("scale", -1)
+
+    status_info = data.get("status")
+    if isinstance(status_info, dict):
+        return status_info.get("scale", -1)
+
+    pod_status = data.get("pod_status")
+    if isinstance(pod_status, dict):
+        return pod_status.get("desired", -1)
+
+    logger.error("Could not determine scale for %s from midclt response", app)
+    return -1
 
 
 def wait_for_stop(app: str, timeout: int = 60) -> bool:
