@@ -13,8 +13,10 @@ logger = logging.getLogger(__name__)
 _active_threads: dict[str, threading.Thread] = {}
 _lock = threading.Lock()
 
-# Regular expression to match isolated "429" codes
-ERROR_RE = re.compile(r'(^|[^[:alnum:]_])429([^[:alnum:]_]|$)')
+# Regular expression to match isolated "429" codes or "rate limited" messages
+ERROR_RE = re.compile(
+    r'(^|[^[:alnum:]_])429([^[:alnum:]_]|$)|rate limited', re.IGNORECASE
+)
 
 
 def check_logs() -> None:
@@ -31,7 +33,7 @@ def check_logs() -> None:
             with log_file.open() as fh:
                 for line in fh:
                     if ERROR_RE.search(line):
-                        logger.warning("429 error detected for %s", app)
+                        logger.warning("Rate limit error detected for %s", app)
                         t = threading.Thread(target=_worker, args=(app,), daemon=True)
                         with _lock:
                             _active_threads[app] = t
@@ -56,6 +58,7 @@ def main() -> None:
     )
     logger.info("Starting log monitor")
     while True:
+        logger.info("Scanning logs")
         check_logs()
         time.sleep(SCAN_INTERVAL)
 
