@@ -15,7 +15,7 @@ _lock = threading.Lock()
 
 # Regular expression to match isolated "429" codes or "rate limited" messages
 ERROR_RE = re.compile(
-    r'(^|[^[:alnum:]_])429([^[:alnum:]_]|$)|rate limited', re.IGNORECASE
+    r'(^|[^[:alnum:]_])429([^[:alnum:]_]|$)|rate limited|rate limit|rate limiting', re.IGNORECASE
 )
 
 
