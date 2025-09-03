@@ -9,7 +9,7 @@ APPS = [
     'cross-seed-ant',
     'cross-seed-ath',
     'cross-seed-bhd',
-    'cross-seed-blu',
+    # 'cross-seed-blu',
     'cross-seed-cg',
     'cross-seed-hdb',
     'cross-seed-kg',
@@ -21,12 +21,12 @@ SCAN_INTERVAL = 10
 # Delay (in seconds) before restarting each application after a failure
 # Set the value for each app as desired (defaults here are 60 minutes)
 RESTART_DELAYS = {
-    'cross-seed-ab': 60 * 60,
-    'cross-seed-ant': 60 * 60,
-    'cross-seed-ath': 60 * 60,
-    'cross-seed-bhd': 60 * 60,
-    'cross-seed-blu': 60 * 60,
-    'cross-seed-cg': 60 * 60,
-    'cross-seed-hdb': 60 * 60,
-    'cross-seed-kg': 60 * 60,
+    'cross-seed-ab': 60 * 15,
+    'cross-seed-ant': 60 * 15,
+    'cross-seed-ath': 60 * 15,
+    'cross-seed-bhd': 60 * 15,
+    'cross-seed-blu': 60 * 15,
+    'cross-seed-cg': 60 * 15,
+    'cross-seed-hdb': 60 * 15,
+    'cross-seed-kg': 60 * 15,
 }
