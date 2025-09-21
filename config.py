@@ -9,10 +9,11 @@ APPS = [
     'cross-seed-ant',
     'cross-seed-ath',
     'cross-seed-bhd',
-    # 'cross-seed-blu',
+    'cross-seed-blu',
     'cross-seed-cg',
     'cross-seed-hdb',
     'cross-seed-kg',
+    'cross-seed-sc',
 ]
 
 # Interval (in seconds) between log scans
@@ -29,4 +30,5 @@ RESTART_DELAYS = {
     'cross-seed-cg': 60 * 15,
     'cross-seed-hdb': 60 * 15,
     'cross-seed-kg': 60 * 15,
+    'cross-seed-sc': 60 * 15,
 }

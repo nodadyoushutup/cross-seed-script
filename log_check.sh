@@ -15,6 +15,7 @@ SUBDIRS=(
   "cross-seed-cg"
   "cross-seed-hdb"
   "cross-seed-kg"
+  "cross-seed-sc"
 )
 
 # Loop through each directory and check for log file
